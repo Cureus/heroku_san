@@ -22,7 +22,7 @@ module HerokuSan
 
     def method_missing(name, *args)
       heroku_api.send(name, *args)
-    rescue Heroku::API::Errors::ErrorWithResponse => error
+    rescue Excon::Error => error
       status = error.response.headers["Status"]
       msg = JSON.parse(error.response.body)['error'] rescue '???'
       error.set_backtrace([])
@@ -30,12 +30,16 @@ module HerokuSan
       raise error
     end
 
+    def post_app_maintenance(app, maintenance_mode)
+      heroku_api.app.update(app, {maintenance: maintenance_mode})
+    end
+
     private
 
     def heroku_api
       @heroku_api ||= begin
         @options[:api_key] ||= auth_token
-        Heroku::API.new(@options)
+        PlatformAPI.connect(@options[:api_key], @options)
       end
     end
 

@@ -16,6 +16,7 @@ group :test do
 end
 
 group :development do
+  gem 'byebug'
   gem 'git-smart'
   gem 'guard'
   gem 'guard-bundler'

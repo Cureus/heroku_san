@@ -1,10 +1,10 @@
-require 'heroku-api'
+require 'platform-api'
 
 module HerokuSan
   module Application
     def ensure_one_worker_running(at_least = 1)
       begin
-        web_processes = heroku.get_ps(app).body.select { |p| p["process"] =~ /web\./ }
+        web_processes = heroku.formation(app, 'web')["quantity"]
       end until restart_processes(web_processes) >= at_least
     end
 
@@ -27,7 +27,7 @@ module HerokuSan
           when "up"
             up += 1
           when "crashed"
-            heroku.post_ps_restart(app, ps: process["process"])
+            heroku.dyno.restart_all(app)
         end
       end
       up

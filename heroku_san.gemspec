@@ -23,7 +23,7 @@ Gem::Specification.new do |s|
   https://toolbelt.heroku.com/
   }
 
-  s.add_runtime_dependency("heroku-api", [">= 0.4.2"])
+  s.add_runtime_dependency("platform-api")
   s.add_runtime_dependency("json")
   s.add_runtime_dependency("rake")
 end
